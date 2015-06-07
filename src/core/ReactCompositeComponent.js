@@ -885,6 +885,13 @@ var ReactCompositeComponentMixin = {
    * @protected
    */
   replaceState: function(completeState, callback) {
+    if (ReactCurrentOwner.current != null) {
+      setTimeout(function () {
+        this.replaceState(completeState, callback);
+      }.bind(this), 10);
+      return;
+    }
+
     validateLifeCycleOnReplaceState(this);
     this._pendingState = completeState;
     if (this._compositeLifeCycleState !== CompositeLifeCycle.MOUNTING) {
@@ -1219,6 +1226,13 @@ var ReactCompositeComponentMixin = {
    * @protected
    */
   forceUpdate: function(callback) {
+    if (ReactCurrentOwner.current != null) {
+      setTimeout(function () {
+        this.forceUpdate(callback);
+      }.bind(this), 10);
+      return;
+    }
+
     var compositeLifeCycleState = this._compositeLifeCycleState;
     invariant(
       this.isMounted() ||
